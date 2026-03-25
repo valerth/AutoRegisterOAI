@@ -78,6 +78,7 @@ function bindPanelEvents() {
     showStatus('🚀 正在启动...', 'loading', 0);
     try {
       const config = collectForm();
+      await ensureSelectedProviderPermission(config);
       await chrome.runtime.sendMessage({ action: 'startRegistration', config });
       showStatus('✅ 任务已启动', 'success');
     } catch (error) {
@@ -518,6 +519,44 @@ function renderHostSummary() {
   const unsupported = !context?.supported;
   document.getElementById('unsupportedNotice').hidden = !unsupported;
   document.getElementById('panelContent').classList.toggle('is-disabled', unsupported);
+}
+
+async function ensureSelectedProviderPermission(config) {
+  const origins = Array.from(new Set([
+    'https://chatgpt.com/*',
+    'https://auth.openai.com/*',
+    'http://localhost:1455/*',
+    ...(config.mailProviders || []).map((provider) => {
+      try {
+        return `${new URL(provider.url).origin}/*`;
+      } catch {
+        return '';
+      }
+    }).filter(Boolean)
+  ]));
+
+  if (!chrome.permissions?.contains || !chrome.permissions?.request) {
+    throw new Error('permissions API unavailable');
+  }
+
+  const missingOrigins = [];
+  for (const originPattern of origins) {
+    const granted = await chrome.permissions.contains({ origins: [originPattern] });
+    if (!granted) {
+      missingOrigins.push(originPattern);
+    }
+  }
+
+  if (!missingOrigins.length) {
+    return true;
+  }
+
+  const granted = await chrome.permissions.request({ origins: missingOrigins });
+  if (!granted) {
+    throw new Error('请先授权当前支持站点后再启动');
+  }
+
+  return true;
 }
 
 async function authorizeCurrentHost() {

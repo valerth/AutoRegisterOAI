@@ -40,6 +40,7 @@
 - [项目截图占位](#项目截图占位)
 - [打赏](#打赏)
 - [开发说明](#开发说明)
+- [构建与发布](#构建与发布)
 - [License](#license)
 
 ---
@@ -619,6 +620,168 @@ assets/donate-alipay.png
 - 更多邮箱 provider 模板
 - 更细粒度的运行日志与调试能力
 - 模板配置导入能力
+
+---
+
+## 构建与发布
+
+当前仓库可以直接以“已解压扩展”方式加载；新增的 Node 工具链仅用于生成可发布的 `dist/`，不会改变现有 Manifest V3 扩展的运行结构，也不会引入 bundler。
+
+### 安装依赖
+
+```bash
+npm install
+```
+
+### 构建命令
+
+#### 开发构建
+
+```bash
+npm run build:dev
+```
+
+行为：
+
+- 清理并重建 `dist/`
+- 按原目录结构复制运行时文件
+- 不做压缩与混淆
+- 校验 `manifest.json` 中关键引用是否在 `dist/` 内存在
+
+#### 发布构建
+
+```bash
+npm run build
+# 或
+npm run build:release
+```
+
+行为：
+
+- 清理并重建 `dist/`
+- 按原目录结构复制运行时文件
+- 对 `dist/` 中的 JS 做逐文件压缩
+- 对 HTML / CSS 做压缩
+- 校验 manifest 中的关键路径与资源引用
+
+#### 可选轻度混淆构建
+
+```bash
+npm run build:obfuscate
+```
+
+行为：
+
+- 包含 `build:release` 的所有步骤
+- 额外对选定 JS 文件做轻度混淆
+- 为避免破坏共享全局契约，默认跳过 `lib/config.js`
+
+> 混淆只能提高阅读门槛，不能真正防止反编译；如果运行异常，优先回退混淆范围或直接使用普通 release 构建。
+
+### dist 目录内容
+
+构建脚本会保持原始扩展运行结构，复制以下运行时内容到 `dist/`：
+
+- `manifest.json`
+- `background/`
+- `content/`
+- `sidepanel/`
+- `lib/`
+- `icons/`
+- `inject/`（如果目录存在）
+
+不会重命名文件，也不会改动 manifest 中已有的相对路径。
+
+### 加载 dist 为已解压扩展
+
+1. 先执行任一构建命令生成 `dist/`
+2. 打开 Chrome 或 Edge 的扩展管理页
+3. 开启开发者模式
+4. 点击“加载已解压的扩展程序”
+5. 选择项目中的 `dist/` 目录
+
+建议至少做一次 smoke test：
+
+- 扩展能正常安装
+- Side Panel 能正常打开
+- Background Service Worker 没有 `AutoRegisterConfig failed to load` 一类错误
+- content scripts 能在声明域名上正常注入
+- 配置读写与消息通信正常
+
+### manifest 校验范围
+
+构建脚本会校验以下引用是否在 `dist/` 中存在：
+
+- `background.service_worker`
+- `side_panel.default_path`
+- `content_scripts[].js`
+- `action.default_icon`
+- `web_accessible_resources`
+
+当前 manifest 中声明了 `inject/*`，如果仓库里没有对应目录，构建脚本会给出提示并跳过该通配模式，不会直接改写 manifest。
+
+### 从 dist 进一步打包 CRX
+
+主流程仍然推荐使用 `dist/` 作为“已解压扩展”加载；CRX 打包只是一个完全可选的第二阶段，用于在本地额外产出可分发的 `.crx` 文件。
+
+#### 可选 CRX 打包命令
+
+先安装依赖：
+
+```bash
+npm install
+```
+
+先生成并验证 `dist/`：
+
+```bash
+npm run build
+```
+
+仅对当前 `dist/` 打包 CRX：
+
+```bash
+npm run package:crx -- --key ./.keys/extension.pem
+```
+
+一条命令完成 release build + CRX 打包：
+
+```bash
+npm run build:crx -- --key ./.keys/extension.pem
+```
+
+也可以显式指定输出路径：
+
+```bash
+npm run package:crx -- --key ./.keys/extension.pem --out ./artifacts/auto-register.crx
+```
+
+#### 打包规则
+
+- 输入目录固定为当前仓库中的 `dist/`
+- 默认私钥路径为 `./.keys/extension.pem`
+- 默认输出路径为 `./artifacts/auto-register.crx`
+- 如果没有找到 `.pem`，脚本会直接报错退出，不会自动生成私钥
+- 打包脚本不会修改 `manifest.json`，也不会改动 `dist/` 内部结构或相对路径
+
+#### 私钥说明
+
+- 同一个 `.pem` 需要长期复用，这样扩展 ID 才能保持稳定
+- `.pem` 必须私下保管，不能提交到仓库
+- 仓库中的 `.gitignore` 已忽略 `.keys/` 和 `artifacts/`
+
+#### 浏览器安装说明
+
+Node 侧脚本当前使用 CRX3 打包依赖直接从 `dist/` 生成 `.crx`，避免依赖本机 Chrome 可执行文件路径。
+
+需要注意的是，现代 Chrome / Edge 对本地 `.crx` 安装存在限制；这个产物更适合作为本地签名分发产物，实际安装方式仍可能受浏览器策略、企业策略或托管更新流程影响。
+
+推荐顺序仍然是：
+
+1. 先运行 `npm run build`
+2. 把 `dist/` 作为已解压扩展加载并做 smoke test
+3. 再运行 `npm run package:crx -- --key ./.keys/extension.pem`
+4. 如需重复打包，始终复用同一个 `.pem`
 
 ---
 

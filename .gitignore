@@ -27,6 +27,8 @@ tmp/
 # Chrome extension packaging
 *.crx
 *.pem
+artifacts/
+.keys/
 
 # Environment / secrets
 .env

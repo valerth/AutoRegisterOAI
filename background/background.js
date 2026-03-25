@@ -1303,10 +1303,18 @@ async function requestHostPermission(origin) {
 
 async function ensureProviderPermission(url) {
   const origin = new URL(url).origin;
-  const permissionResult = await requestHostPermission(origin);
-  if (!permissionResult.granted) {
-    throw new Error(`Provider host permission denied: ${origin}`);
+  const origins = [`${origin}/*`];
+  const permissionsApi = chrome.permissions;
+
+  if (!permissionsApi || typeof permissionsApi.contains !== 'function') {
+    throw new Error('permissions API unavailable');
   }
+
+  const alreadyGranted = await permissionsApi.contains({ origins });
+  if (!alreadyGranted) {
+    throw new Error(`Provider host permission missing: ${origin}`);
+  }
+
   return true;
 }
 

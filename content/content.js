@@ -80,7 +80,25 @@ async function detectPageState(selectors, timeout) {
 }
 
 async function performLogout(selectors, timeout) {
-  const userMenu = await waitForElement(selectors.selUserMenu, timeout);
+  const userMenu = await safeQuerySelector(selectors.selUserMenu, Math.min(timeout, 4000));
+  if (!userMenu) {
+    const signupBtn = await safeQuerySelector(selectors.selSignupBtn, 1500);
+    const loginModal = selectors.selLoginModal
+      ? await safeQuerySelector(selectors.selLoginModal, 1500)
+      : null;
+
+    if (signupBtn || loginModal) {
+      return {
+        ok: true,
+        triggered: false,
+        confirmed: false,
+        alreadyLoggedOut: true
+      };
+    }
+
+    throw new Error(`Timeout: ${selectors.selUserMenu}`);
+  }
+
   await safeClick(userMenu);
   await sleep(400);
 
@@ -97,6 +115,19 @@ async function performLogout(selectors, timeout) {
     await safeClick(logoutConfirmBtn);
     await sleep(300);
     return { ok: true, triggered: true, confirmed: true };
+  }
+
+  const signupBtnAfterLogout = await safeQuerySelector(selectors.selSignupBtn, 1500);
+  const loginModalAfterLogout = selectors.selLoginModal
+    ? await safeQuerySelector(selectors.selLoginModal, 1500)
+    : null;
+  if (signupBtnAfterLogout || loginModalAfterLogout) {
+    return {
+      ok: true,
+      triggered: Boolean(logoutBtn),
+      confirmed: false,
+      alreadyLoggedOut: true
+    };
   }
 
   return { ok: true, triggered: Boolean(logoutBtn), confirmed: false };
