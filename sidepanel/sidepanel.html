@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto Register Side Panel</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <div class="sidepanel-shell">
+    <div class="sidepanel-panel">
+      <div class="sidepanel-header">
+        <h2>注册配置</h2>
+        <span id="configVersion" class="sidepanel-version">v3.2.0</span>
+      </div>
+
+      <div id="status" class="sidepanel-status sidepanel-status--info">
+        <span class="status-icon">ℹ️</span>
+        <span class="status-text">就绪</span>
+      </div>
+
+      <section class="sidepanel-section" data-section-id="site-permissions">
+        <button class="sidepanel-section-toggle" type="button" data-action="toggle-section" data-section-id="site-permissions" aria-expanded="true">
+          <span class="sidepanel-section-toggle__title">站点与权限</span>
+          <span class="sidepanel-section-toggle__meta">始终可见</span>
+          <span class="sidepanel-section-toggle__icon" aria-hidden="true"></span>
+        </button>
+        <div class="sidepanel-section-body">
+          <div class="sidepanel-field sidepanel-field--stacked">
+            <label>当前页面</label>
+            <div id="currentHostSummary" class="sidepanel-summary"></div>
+          </div>
+          <div class="sidepanel-field sidepanel-field--stacked">
+            <label>已识别站点集合</label>
+            <div id="allowedHostList" class="sidepanel-chip-list"></div>
+          </div>
+          <div class="sidepanel-field sidepanel-field--stacked">
+            <label>当前状态</label>
+            <div id="currentHostStatus" class="sidepanel-summary sidepanel-summary--status"></div>
+          </div>
+          <div class="sidepanel-actions sidepanel-actions--single">
+            <button id="btnAuthorizeCurrentHost" type="button">一键授权当前域名</button>
+          </div>
+        </div>
+      </section>
+
+      <div id="unsupportedNotice" class="sidepanel-empty-state" hidden>
+        <div class="sidepanel-empty-state__title">请切换到受支持页面</div>
+        <div class="sidepanel-empty-state__desc">仅在 chatgpt.com、auth.openai.com、已配置邮箱 provider 域名和本地 callback 页上提供页面能力。</div>
+      </div>
+
+      <div id="panelContent">
+        <div class="sidepanel-content-scroll">
+          <section class="sidepanel-section" data-section-id="basic-settings">
+            <button class="sidepanel-section-toggle" type="button" data-action="toggle-section" data-section-id="basic-settings" aria-expanded="true">
+              <span class="sidepanel-section-toggle__title">基础设置</span>
+              <span class="sidepanel-section-toggle__icon" aria-hidden="true"></span>
+            </button>
+            <div class="sidepanel-section-body">
+              <div class="sidepanel-form-row">
+                <div class="sidepanel-field sidepanel-field--stacked">
+                  <label for="runCount">运行次数</label>
+                  <input type="number" id="runCount" min="1" max="50" value="1">
+                </div>
+                <div class="sidepanel-field sidepanel-field--stacked">
+                  <label for="defaultTimeout">超时 (秒)</label>
+                  <input type="number" id="defaultTimeout" min="5" max="300" value="30">
+                </div>
+              </div>
+              <div class="sidepanel-field sidepanel-field--stacked">
+                <label for="selectedMailProviderId">本次使用的邮箱 Provider</label>
+                <select id="selectedMailProviderId"></select>
+              </div>
+              <div class="sidepanel-summary-grid">
+                <div class="sidepanel-summary-item">
+                  <span class="sidepanel-summary-label">当前 Provider URL</span>
+                  <span id="selectedProviderUrl" class="sidepanel-summary-value"></span>
+                </div>
+                <div class="sidepanel-summary-item">
+                  <span class="sidepanel-summary-label">Provider 数量</span>
+                  <span id="providerCount" class="sidepanel-summary-value"></span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="sidepanel-section is-collapsed" data-section-id="chat-selectors">
+            <button class="sidepanel-section-toggle" type="button" data-action="toggle-section" data-section-id="chat-selectors" aria-expanded="false">
+              <span class="sidepanel-section-toggle__title">主站选择器</span>
+              <span class="sidepanel-section-toggle__meta">chatgpt.com</span>
+              <span class="sidepanel-section-toggle__icon" aria-hidden="true"></span>
+            </button>
+            <div class="sidepanel-section-body">
+              <div id="chatSelectorGrid" class="sidepanel-selector-grid"></div>
+            </div>
+          </section>
+
+          <section class="sidepanel-section is-collapsed" data-section-id="auth-selectors">
+            <button class="sidepanel-section-toggle" type="button" data-action="toggle-section" data-section-id="auth-selectors" aria-expanded="false">
+              <span class="sidepanel-section-toggle__title">认证页选择器</span>
+              <span class="sidepanel-section-toggle__meta">auth.openai.com</span>
+              <span class="sidepanel-section-toggle__icon" aria-hidden="true"></span>
+            </button>
+            <div class="sidepanel-section-body">
+              <div id="authSelectorGrid" class="sidepanel-selector-grid"></div>
+            </div>
+          </section>
+
+          <section class="sidepanel-section is-collapsed" data-section-id="pre-logout-steps">
+            <button class="sidepanel-section-toggle" type="button" data-action="toggle-section" data-section-id="pre-logout-steps" aria-expanded="false">
+              <span class="sidepanel-section-toggle__title">退出登录前弹窗关闭</span>
+              <span class="sidepanel-section-toggle__icon" aria-hidden="true"></span>
+            </button>
+            <div class="sidepanel-section-body">
+              <div id="preLogoutCloseSteps" class="sidepanel-list"></div>
+              <div class="sidepanel-actions sidepanel-actions--single">
+                <button id="btnAddPreLogoutStep" type="button">新增关闭步骤</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="sidepanel-section is-collapsed" data-section-id="post-registration">
+            <button class="sidepanel-section-toggle" type="button" data-action="toggle-section" data-section-id="post-registration" aria-expanded="false">
+              <span class="sidepanel-section-toggle__title">注册成功后动作</span>
+              <span class="sidepanel-section-toggle__icon" aria-hidden="true"></span>
+            </button>
+            <div class="sidepanel-section-body">
+              <div id="postRegistrationSteps" class="sidepanel-list"></div>
+              <div class="sidepanel-actions sidepanel-actions--single">
+                <button id="btnAddPostStep" type="button">新增动作步骤</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="sidepanel-section is-collapsed" data-section-id="post-auth-steps">
+            <button class="sidepanel-section-toggle" type="button" data-action="toggle-section" data-section-id="post-auth-steps" aria-expanded="false">
+              <span class="sidepanel-section-toggle__title">授权后动作</span>
+              <span class="sidepanel-section-toggle__icon" aria-hidden="true"></span>
+            </button>
+            <div class="sidepanel-section-body">
+              <div id="postAuthSteps" class="sidepanel-list"></div>
+              <div class="sidepanel-actions sidepanel-actions--single">
+                <button id="btnAddPostAuthStep" type="button">新增动作步骤</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="sidepanel-section is-collapsed" data-section-id="mail-providers">
+            <button class="sidepanel-section-toggle" type="button" data-action="toggle-section" data-section-id="mail-providers" aria-expanded="false">
+              <span class="sidepanel-section-toggle__title">邮箱 Providers</span>
+              <span class="sidepanel-section-toggle__icon" aria-hidden="true"></span>
+            </button>
+            <div class="sidepanel-section-body">
+              <div id="mailProviders" class="sidepanel-list"></div>
+              <div class="sidepanel-actions sidepanel-actions--triple">
+                <button id="btnAddProvider" type="button">新增</button>
+                <button id="btnCloneProvider" type="button">复制当前</button>
+                <button id="btnDeleteProvider" type="button">删除当前</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="sidepanel-section is-collapsed" data-section-id="oauth-config">
+            <button class="sidepanel-section-toggle" type="button" data-action="toggle-section" data-section-id="oauth-config" aria-expanded="false">
+              <span class="sidepanel-section-toggle__title">OAuth 配置</span>
+              <span class="sidepanel-section-toggle__icon" aria-hidden="true"></span>
+            </button>
+            <div class="sidepanel-section-body">
+              <div class="sidepanel-field sidepanel-field--stacked">
+                <label for="tokenUrl">Token URL</label>
+                <input type="text" id="tokenUrl" readonly class="sidepanel-readonly">
+              </div>
+              <div class="sidepanel-field sidepanel-field--stacked">
+                <label for="clientId">Client ID</label>
+                <input type="text" id="clientId" readonly class="sidepanel-readonly">
+              </div>
+              <div class="sidepanel-field sidepanel-field--stacked">
+                <label for="codeVerifier">Code Verifier</label>
+                <input type="text" id="codeVerifier" readonly class="sidepanel-readonly">
+              </div>
+              <div class="sidepanel-field sidepanel-field--stacked">
+                <label for="redirectUri">Redirect URI</label>
+                <input type="text" id="redirectUri" readonly class="sidepanel-readonly">
+              </div>
+            </div>
+          </section>
+
+          <section class="sidepanel-section is-collapsed" data-section-id="result-save">
+            <button class="sidepanel-section-toggle" type="button" data-action="toggle-section" data-section-id="result-save" aria-expanded="false">
+              <span class="sidepanel-section-toggle__title">结果保存</span>
+              <span class="sidepanel-section-toggle__icon" aria-hidden="true"></span>
+            </button>
+            <div class="sidepanel-section-body">
+              <div class="sidepanel-field sidepanel-field--stacked">
+                <label for="resultSaveFolder">下载子文件夹</label>
+                <input type="text" id="resultSaveFolder" placeholder="auth-results">
+              </div>
+              <label class="sidepanel-checkbox">
+                <input type="checkbox" id="resultUploadEnabled">
+                保存完成后同步上传
+              </label>
+              <div class="sidepanel-field sidepanel-field--stacked">
+                <label for="resultUploadUrl">管理地址 / Upload URL</label>
+                <input type="text" id="resultUploadUrl" placeholder="https://example.com/upload">
+              </div>
+              <div class="sidepanel-field sidepanel-field--stacked">
+                <label for="resultUploadToken">Token</label>
+                <input type="password" id="resultUploadToken" placeholder="Bearer Token">
+              </div>
+              <div class="sidepanel-field sidepanel-field--stacked">
+                <label for="resultUploadTimeout">上传超时 (秒)</label>
+                <input type="number" id="resultUploadTimeout" min="1" max="300" value="30">
+              </div>
+              <div class="sidepanel-summary">
+                本地 JSON 始终会保存到浏览器下载目录；留空子文件夹则保存到下载目录根目录。
+              </div>
+              <div class="sidepanel-summary">
+                保存规则：<code>&lt;download-folder&gt;/&lt;subfolder&gt;/&lt;sanitized_email&gt;.json</code>
+              </div>
+              <div class="sidepanel-summary">
+                开启上传后，会额外发送 <code>multipart/form-data</code> 请求，字段名固定为 <code>file</code>，并携带请求头 <code>Authorization: Bearer &lt;token&gt;</code>。
+              </div>
+            </div>
+          </section>
+
+          <section class="sidepanel-section is-collapsed" data-section-id="recent-results">
+            <button class="sidepanel-section-toggle" type="button" data-action="toggle-section" data-section-id="recent-results" aria-expanded="false">
+              <span class="sidepanel-section-toggle__title">最近运行结果</span>
+              <span class="sidepanel-section-toggle__icon" aria-hidden="true"></span>
+            </button>
+            <div class="sidepanel-section-body">
+              <div class="sidepanel-actions sidepanel-actions--single">
+                <button id="btnClearRecentResults" type="button">清除全部</button>
+              </div>
+              <div id="recentResults" class="sidepanel-list sidepanel-list--results"></div>
+            </div>
+          </section>
+        </div>
+
+        <div class="sidepanel-sticky-actions">
+          <div class="sidepanel-actions sidepanel-actions--secondary">
+            <button id="btnReset" type="button">重置</button>
+            <button id="btnExport" type="button">导出</button>
+            <button id="btnImport" type="button">导入</button>
+            <button id="btnSave" type="button">保存</button>
+          </div>
+          <div class="sidepanel-actions sidepanel-actions--primary">
+            <button id="btnStart" type="button">开始运行</button>
+          </div>
+        </div>
+
+        <div class="sidepanel-footer">
+          <span>配置版本：<strong id="versionDisplay">v3.2.0</strong></span>
+          <span id="autoSaveIndicator">自动保存已启用</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="../lib/config.js"></script>
+  <script src="sidepanel.js"></script>
+</body>
+</html>

@@ -1,0 +1,354 @@
+:root {
+  color-scheme: dark;
+  --bg: #101217;
+  --panel: #171a21;
+  --muted: #9aa4b2;
+  --text: #f4f7fb;
+  --border: #2a3040;
+  --accent: #4f8cff;
+  --success: #1f9d61;
+  --error: #d9534f;
+  --warning: #d9a441;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font: 13px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.sidepanel-shell {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.sidepanel-panel {
+  padding: 12px;
+}
+
+.sidepanel-header,
+.sidepanel-actions,
+.sidepanel-form-row,
+.sidepanel-summary-grid,
+.sidepanel-selector-control,
+.sidepanel-mini-actions,
+.sidepanel-footer,
+.sidepanel-step-row,
+.sidepanel-status,
+.sidepanel-section-toggle {
+  display: flex;
+  gap: 8px;
+}
+
+.sidepanel-header,
+.sidepanel-footer,
+.sidepanel-status,
+.sidepanel-step-row,
+.sidepanel-section-toggle {
+  align-items: center;
+}
+
+.sidepanel-header,
+.sidepanel-footer {
+  justify-content: space-between;
+}
+
+.sidepanel-header h2 {
+  margin: 0;
+}
+
+.sidepanel-version,
+.sidepanel-chip,
+.sidepanel-summary,
+.sidepanel-result-item,
+.sidepanel-result-empty,
+.sidepanel-provider-card,
+.sidepanel-step-row,
+.sidepanel-empty-state,
+.sidepanel-status,
+.sidepanel-section {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.sidepanel-status,
+.sidepanel-empty-state,
+.sidepanel-section,
+.sidepanel-provider-card,
+.sidepanel-step-row,
+.sidepanel-result-item,
+.sidepanel-sticky-actions {
+  background: var(--panel);
+}
+
+.sidepanel-status {
+  padding: 10px 12px;
+  margin: 12px 0;
+}
+
+.sidepanel-status--success { border-color: rgba(31, 157, 97, 0.6); }
+.sidepanel-status--error { border-color: rgba(217, 83, 79, 0.6); }
+.sidepanel-status--warning { border-color: rgba(217, 164, 65, 0.6); }
+.sidepanel-status.is-animating .status-icon { animation: pulse 1s infinite; }
+
+.sidepanel-content-scroll {
+  padding-bottom: 88px;
+}
+
+.sidepanel-section {
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.sidepanel-section-toggle {
+  width: 100%;
+  justify-content: flex-start;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 12px;
+  text-align: left;
+}
+
+.sidepanel-section-toggle:hover {
+  border-color: transparent;
+  background: rgba(255,255,255,0.03);
+}
+
+.sidepanel-section-toggle__title {
+  font-weight: 600;
+}
+
+.sidepanel-section-toggle:focus-visible,
+.sidepanel-sticky-actions button:focus-visible,
+.sidepanel-section-body button:focus-visible,
+.sidepanel-field input:focus-visible,
+.sidepanel-field select:focus-visible {
+  outline: 2px solid rgba(79, 140, 255, 0.9);
+  outline-offset: 2px;
+}
+
+.sidepanel-section-toggle__meta {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.sidepanel-section-toggle__icon {
+  margin-left: auto;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid var(--muted);
+  border-bottom: 2px solid var(--muted);
+  transform: rotate(45deg);
+  transition: transform 0.18s ease;
+  flex: 0 0 auto;
+}
+
+.sidepanel-section-body {
+  padding: 0 12px 12px;
+}
+
+.sidepanel-section.is-collapsed .sidepanel-section-body {
+  display: none;
+}
+
+.sidepanel-section.is-collapsed .sidepanel-section-toggle__icon {
+  transform: rotate(-45deg);
+}
+
+.sidepanel-field {
+  margin-top: 10px;
+}
+
+.sidepanel-field--stacked label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+}
+
+.sidepanel-form-row,
+.sidepanel-summary-grid,
+.sidepanel-actions--triple,
+.sidepanel-step-row,
+.sidepanel-actions--secondary {
+  flex-wrap: wrap;
+}
+
+.sidepanel-form-row > *,
+.sidepanel-summary-grid > * {
+  flex: 1 1 0;
+}
+
+.sidepanel-summary-grid {
+  margin-top: 10px;
+}
+
+.sidepanel-summary-item,
+.sidepanel-summary {
+  padding: 10px;
+  background: rgba(255,255,255,0.02);
+}
+
+.sidepanel-summary-label {
+  display: block;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.sidepanel-chip-list,
+.sidepanel-list {
+  display: grid;
+  gap: 8px;
+}
+
+.sidepanel-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  margin: 0 6px 6px 0;
+  color: var(--muted);
+  background: rgba(255,255,255,0.03);
+}
+
+.sidepanel-chip.is-active {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.sidepanel-selector-grid {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.sidepanel-selector-item label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+}
+
+.sidepanel-selector-control input,
+.sidepanel-field input,
+.sidepanel-field select {
+  width: 100%;
+}
+
+input,
+select,
+button {
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #0f131a;
+  color: var(--text);
+  padding: 8px 10px;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:hover {
+  border-color: var(--accent);
+}
+
+.sidepanel-mini-actions button {
+  width: 38px;
+  padding: 8px 0;
+}
+
+.sidepanel-actions {
+  margin: 10px 0;
+}
+
+.sidepanel-actions > button {
+  flex: 1 1 auto;
+}
+
+.sidepanel-provider-card,
+.sidepanel-step-row,
+.sidepanel-empty-state,
+.sidepanel-result-item {
+  padding: 10px;
+}
+
+.sidepanel-provider-card.is-selected {
+  border-color: var(--accent);
+}
+
+.sidepanel-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+}
+
+.sidepanel-readonly {
+  color: var(--muted);
+}
+
+.sidepanel-empty-state {
+  margin-bottom: 12px;
+}
+
+.sidepanel-empty-state__title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.sidepanel-empty-state__desc {
+  color: var(--muted);
+}
+
+.sidepanel-sticky-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  margin: 0 -12px;
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.28);
+}
+
+.sidepanel-actions--secondary {
+  margin-bottom: 8px;
+}
+
+.sidepanel-actions--primary {
+  margin: 0;
+}
+
+.sidepanel-actions--primary #btnStart {
+  width: 100%;
+  font-weight: 600;
+  background: var(--accent);
+  border-color: transparent;
+}
+
+.sidepanel-actions--primary #btnStart:hover {
+  filter: brightness(1.05);
+}
+
+#panelContent.is-disabled {
+  opacity: 0.6;
+}
+
+#panelContent.is-disabled .sidepanel-sticky-actions {
+  opacity: 0.8;
+}
+
+#panelContent.is-disabled .sidepanel-sticky-actions button,
+#panelContent.is-disabled .sidepanel-section-toggle,
+#panelContent.is-disabled .sidepanel-section-body button {
+  pointer-events: none;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}

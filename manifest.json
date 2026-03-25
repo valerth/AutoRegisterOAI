@@ -1,0 +1,57 @@
+{
+  "manifest_version": 3,
+  "name": "ChatGPT Auto Register",
+  "version": "3.0.0",
+  "description": "自动化注册工具 - 多站点配置、可选权限与批处理结果追踪",
+  "permissions": [
+    "tabs",
+    "storage",
+    "notifications",
+    "scripting",
+    "sidePanel",
+    "downloads"
+  ],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://auth.openai.com/*",
+    "http://localhost:1455/*"
+  ],
+  "optional_host_permissions": [
+    "https://*/*",
+    "http://*/*"
+  ],
+  "action": {
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background/background.js"
+  },
+  "side_panel": {
+    "default_path": "sidepanel/sidepanel.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://auth.openai.com/*",
+        "http://localhost:1455/*"
+      ],
+      "js": ["lib/config.js", "content/utils.js", "content/selector-helper.js", "content/sidebar.js", "content/content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [{
+    "resources": ["inject/*", "lib/config.js"],
+    "matches": [
+      "https://chatgpt.com/*",
+      "https://auth.openai.com/*",
+      "http://localhost:1455/*",
+      "https://*/*",
+      "http://*/*"
+    ]
+  }]
+}

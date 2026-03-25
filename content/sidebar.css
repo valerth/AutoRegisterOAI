@@ -1,0 +1,383 @@
+#auto-register-sidebar-root {
+  all: initial;
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  z-index: 2147483647;
+  pointer-events: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+#auto-register-sidebar-root * {
+  box-sizing: border-box;
+}
+
+#auto-register-sidebar-root.is-visible {
+  pointer-events: auto;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__panel {
+  width: 420px;
+  max-width: min(420px, 90vw);
+  height: 100vh;
+  background: #f8f9fa;
+  color: #333;
+  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.18);
+  border-left: 1px solid #d9dee3;
+  transform: translateX(100%);
+  transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+#auto-register-sidebar-root.is-visible .auto-register-sidebar__panel {
+  transform: translateX(0);
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__header,
+#auto-register-sidebar-root .auto-register-sidebar__section,
+#auto-register-sidebar-root .auto-register-sidebar__actions,
+#auto-register-sidebar-root .auto-register-sidebar__footer,
+#auto-register-sidebar-root .auto-register-sidebar__status {
+  font-family: inherit;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e9ecef;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__version {
+  font-size: 11px;
+  color: #fff;
+  background: #007bff;
+  border-radius: 999px;
+  padding: 4px 8px;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__icon-button {
+  border: none;
+  background: #e9ecef;
+  color: #495057;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 16px 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  border: 1px solid #bee5eb;
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__status--success {
+  background: #d4edda;
+  border-color: #c3e6cb;
+  color: #155724;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__status--error {
+  background: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__status--warning {
+  background: #fff3cd;
+  border-color: #ffeaa7;
+  color: #856404;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__status.is-animating {
+  animation: auto-register-sidebar-pulse 1s infinite;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__panel > .auto-register-sidebar__section,
+#auto-register-sidebar-root .auto-register-sidebar__panel > .auto-register-sidebar__actions,
+#auto-register-sidebar-root .auto-register-sidebar__panel > .auto-register-sidebar__footer {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__section {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 12px;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__section h3 {
+  margin: 0 0 12px;
+  font-size: 14px;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__panel {
+  overflow-y: auto;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__field,
+#auto-register-sidebar-root .auto-register-sidebar__selector-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+#auto-register-sidebar-root label {
+  font-size: 12px;
+  color: #495057;
+}
+
+#auto-register-sidebar-root input,
+#auto-register-sidebar-root select,
+#auto-register-sidebar-root button {
+  font: inherit;
+}
+
+#auto-register-sidebar-root input,
+#auto-register-sidebar-root select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 12px;
+  color: #212529;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__readonly {
+  background: #f1f3f5;
+  color: #6c757d;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__selector-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__selector-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__mini-actions {
+  display: flex;
+  gap: 4px;
+}
+
+#auto-register-sidebar-root .btn-capture,
+#auto-register-sidebar-root .btn-test {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#auto-register-sidebar-root .btn-capture {
+  background: #6c757d;
+  color: #fff;
+}
+
+#auto-register-sidebar-root .btn-test {
+  background: #17a2b8;
+  color: #fff;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__summary {
+  padding: 10px;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  background: #f8f9fa;
+  font-size: 12px;
+  word-break: break-word;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #e9ecef;
+  color: #495057;
+  font-size: 11px;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__chip.is-active {
+  background: #007bff;
+  color: #fff;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__summary-item {
+  padding: 10px;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  background: #f8f9fa;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__summary-label {
+  display: block;
+  font-size: 11px;
+  color: #6c757d;
+  margin-bottom: 4px;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__summary-value {
+  display: block;
+  font-size: 12px;
+  color: #212529;
+  word-break: break-word;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__provider-card,
+#auto-register-sidebar-root .auto-register-sidebar__result-card,
+#auto-register-sidebar-root .auto-register-sidebar__step-row {
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 10px;
+  background: #fff;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__provider-card.is-selected {
+  border-color: #007bff;
+  box-shadow: 0 0 0 1px rgba(0, 123, 255, 0.15);
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__step-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 100px auto auto;
+  gap: 8px;
+  align-items: end;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #495057;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__checkbox input {
+  width: auto;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__result-card.is-success {
+  border-color: #c3e6cb;
+  background: #f1fbf3;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__result-card.is-error {
+  border-color: #f5c6cb;
+  background: #fff5f5;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__empty {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__actions--single {
+  grid-template-columns: 1fr;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__actions--triple {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+
+#auto-register-sidebar-root .auto-register-sidebar__actions--primary {
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 16px;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__actions button {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  background: #6c757d;
+  color: #fff;
+}
+
+#auto-register-sidebar-root #btnSave {
+  background: #007bff;
+}
+
+#auto-register-sidebar-root #btnStart {
+  background: #28a745;
+}
+
+#auto-register-sidebar-root .auto-register-sidebar__footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 11px;
+  color: #6c757d;
+  padding-bottom: 18px;
+}
+
+@keyframes auto-register-sidebar-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
