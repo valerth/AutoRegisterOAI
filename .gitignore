@@ -41,9 +41,3 @@ artifacts/
 # Runtime output / exported results
 auth-results/
 downloads/
-
-# Optional assets generated locally
-assets/donate-wechat.png
-assets/donate-alipay.png
-assets/preview-sidepanel.png
-assets/preview-run-result.png
